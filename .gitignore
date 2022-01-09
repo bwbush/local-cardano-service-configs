@@ -1,0 +1,9 @@
+tmp/
+*.tmp
+*.log
+*.sw?
+.pre-commit-config.yaml
+cardano-node/
+cardano-db-sync/
+cardano-wallet/
+plutus-apps/
