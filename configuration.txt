@@ -1,6 +1,6 @@
 export CARDANO_NODE_SOCKET_PATH=/data/mainnet.socket
 MAGIC=(--mainnet)
-cardano-node: /data/mainnet.socket
+cardano-node: 23001
 cardano-wallet:	28080
 cardano-chain-index: 29084
 cardano-db-sync: mainnet
