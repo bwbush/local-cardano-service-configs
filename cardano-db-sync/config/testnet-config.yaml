@@ -1,6 +1,6 @@
 # Explorer DB Node configuration
 
-NetworkName: mainnet
+NetworkName: testnet
 
 EnableLogMetrics: False
 EnableLogging: True
@@ -12,7 +12,7 @@ EnableLogging: True
 # config, it will likely lead to db-sync throwing up weird error messages from
 # the consensus layer.
 # The path to the node config file is relative to this config file.
-NodeConfigFile: ../../cardano-node/configuration/cardano/mainnet-config.json
+NodeConfigFile: ../../plutus-apps/plutus-pab/test-node/testnet/testnet-config.json
 
 # ------------------------------------------------------------------------------
 # Logging configuration follows.

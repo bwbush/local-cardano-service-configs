@@ -2,6 +2,6 @@
 
 cd cardano-node
 
-nix-build -A scripts.mainnet.node -o build-node-mainnet
+nix-build -A scripts.testnet.node -o build-node-testnet
 
-./build-node-mainnet/bin/cardano-node-mainnet
+./build-node-testnet/bin/cardano-node-testnet

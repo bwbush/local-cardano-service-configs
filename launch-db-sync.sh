@@ -1,14 +1,14 @@
 #!/usr/bin/env nix-shell
 #!nix-shell -i bash -p postgresql
 
-####cat << EOI > config/pgpass-mainnet
-####/data/postgresql:5432:mainnet:cardano:*
+####cat << EOI > config/pgpass-testnet
+####/data/postgresql:5432:testnet:cardano:*
 ####EOI
-####chmod 0600 config/pgpass-mainnet
+####chmod 0600 config/pgpass-testnet
 ####
 ####psql -c 'ALTER USER cardano CREATEDB;'
 ####
-####PGPASSFILE=config/pgpass-mainnet scripts/postgresql-setup.sh --createdb
+####PGPASSFILE=config/pgpass-testnet scripts/postgresql-setup.sh --createdb
 
 PGHOST=/data/postgresql
 
@@ -16,8 +16,8 @@ cd cardano-db-sync
 
 nix-build -A cardano-db-sync -o build-db-sync
 
-PGPASSFILE=config/pgpass-mainnet build-db-sync/bin/cardano-db-sync \
-    --config config/mainnet-config.yaml \
-    --socket-path ../cardano-node/state-node-mainnet/node.socket \
-    --state-dir ledger-state/mainnet \
+PGPASSFILE=config/pgpass-testnet build-db-sync/bin/cardano-db-sync \
+    --config config/testnet-config.yaml \
+    --socket-path ../cardano-node/state-node-testnet/node.socket \
+    --state-dir ledger-state/testnet \
     --schema-dir schema/

@@ -7,4 +7,4 @@ cabal install --installdir=build-chain-index exe:plutus-chain-index
 
 cd plutus-pab
 
-../build-chain-index/plutus-chain-index --config test-node/mainnet/chain-index-config.json start-index
+../build-chain-index/plutus-chain-index --config test-node/testnet/chain-index-config.json start-index

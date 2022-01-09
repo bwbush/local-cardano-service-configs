@@ -3,15 +3,15 @@
     "scSlotLength": 1000,
     "scSlotZeroTime": 1596059091000
   },
-  "cicPort": 29084,
+  "cicPort": 39083,
   "cicSecurityParam": 2160,
-  "cicSocketPath": "../../cardano-node/state-node-mainnet/node.socket",
-  "cicDbPath": "test-node/mainnet/chain-index.db",
+  "cicSocketPath": "../../cardano-node/state-node-testnet/node.socket",
+  "cicDbPath": "test-node/testnet/chain-index.db",
   "cicNetworkId": {
     "contents": {
-      "unNetworkMagic": 764824073
+      "unNetworkMagic": 1097911063
     },
-    "tag": "Mainnet"
+    "tag": "Testnet"
   },
   "cicStoreFrom": {
     "unBlockNo": 0
