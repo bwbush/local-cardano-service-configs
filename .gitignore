@@ -7,3 +7,5 @@ cardano-node/
 cardano-db-sync/
 cardano-wallet/
 plutus-apps/
+node/db/
+chain-index.sqlite*

@@ -2,13 +2,13 @@
 
 echo
 echo "Node database size:"
-du -hs cardano-node/state-node-mainnet/db-mainnet/
+du -hs node/db
 
 echo
 echo "Chain index tip:"
-du -h plutus-apps/plutus-pab/test-node/mainnet/chain-index.db
+du -h chain-index.sqlite
 
 echo
 echo "Chain index size:"
-curl -H 'accept: application/json;charset=utf-8' http://localhost:29084/tip
+curl -H 'accept: application/json;charset=utf-8' http://localhost:49084/tip
 echo
