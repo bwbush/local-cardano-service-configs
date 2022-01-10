@@ -10,5 +10,5 @@ du -h chain-index.sqlite
 
 echo
 echo "Chain index size:"
-curl -H 'accept: application/json;charset=utf-8' http://localhost:49084/tip
+curl -H 'accept: application/json;charset=utf-8' http://localhost:49083/tip
 echo
