@@ -1,6 +1,6 @@
 export CARDANO_NODE_SOCKET_PATH=/data/testnet.socket
 MAGIC=(--testnet 1097911063)
 cardano-node: S/B 33001
-cardano-wallet:	38080
-cardano-chain-index: 39084
+cardano-wallet:	38090
+cardano-chain-index: 39083
 cardano-db-sync: testnet

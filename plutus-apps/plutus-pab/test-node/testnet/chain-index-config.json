@@ -3,7 +3,7 @@
     "scSlotLength": 1000,
     "scSlotZeroTime": 1596059091000
   },
-  "cicPort": 39084,
+  "cicPort": 39083,
   "cicSecurityParam": 2160,
   "cicSocketPath": "../../cardano-node/state-node-testnet/node.socket",
   "cicDbPath": "test-node/testnet/chain-index.db",
