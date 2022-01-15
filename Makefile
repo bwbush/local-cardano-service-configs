@@ -56,11 +56,11 @@ run-server: build-run
 
 
 run-client:
-	nix-shell marlowe-cardano/shell.nix --run "cd marlowe-cardano/marlowe-dashboard-client; npm run start"
+	nix-shell marlowe-cardano/shell.nix --run "cd marlowe-cardano/marlowe-dashboard-client; spago build; npm run start"
 
 
 statistics:
-	@du -hs node.db wallet.db chain-index.db marlowe-pab.db
+	@du -hsc node.db wallet.db chain-index.db marlowe-pab.db
 	@curl -H 'accept: application/json;charset=utf-8' http://localhost:9083/tip
 
 
