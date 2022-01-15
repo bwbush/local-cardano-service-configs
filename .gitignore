@@ -7,5 +7,11 @@ cardano-node/
 cardano-db-sync/
 cardano-wallet/
 plutus-apps/
-node/db/
-chain-index.sqlite*
+marlowe-cardano/
+node.db/
+wallet.db/
+chain-index.db/
+marlowe-pab.db
+build-*
+utxo1/
+*.mantra

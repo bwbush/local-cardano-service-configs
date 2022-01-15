@@ -1,0 +1,39 @@
+36,37c36,37
+<   "TraceDNSResolver": true,
+<   "TraceDNSSubscription": true,
+---
+>   "TraceDNSResolver": false,
+>   "TraceDNSSubscription": false,
+43c43
+<   "TraceIpSubscription": true,
+---
+>   "TraceIpSubscription": false,
+51c51
+<   "TraceMempool": false,
+---
+>   "TraceMempool": true,
+53,55c53,55
+<   "TracePeerSelection": true,
+<   "TracePeerSelectionActions": true,
+<   "TracePublicRootPeers": true,
+---
+>   "TracePeerSelection": false,
+>   "TracePeerSelectionActions": false,
+>   "TracePublicRootPeers": false,
+68,69c68,69
+<       "JournalSK",
+<       "cardano"
+---
+>       "StdoutSK",
+>       "stdout"
+77c77
+<   "minSeverity": "Debug",
+---
+>   "minSeverity": "Info",
+104,105c104,106
+<       "scKind": "JournalSK",
+<       "scName": "cardano"
+---
+>       "scKind": "StdoutSK",
+>       "scName": "stdout",
+>       "scRotation": null
