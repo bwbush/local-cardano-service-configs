@@ -1,4 +1,4 @@
 {
-  "getWbeConfig": { "_wbeHost": "localhost", "_wbePort": 8090 },
-  "getStaticPath": "/var/empty"
+  "wbeConfig": { "host": "localhost", "port": 8090 },
+  "staticPath": "/var/empty"
 }
