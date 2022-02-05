@@ -8,6 +8,7 @@ cardano-db-sync/
 cardano-wallet/
 plutus-apps/
 marlowe-cardano/
+daedalus/
 node.db/
 wallet.db/
 chain-index.db/

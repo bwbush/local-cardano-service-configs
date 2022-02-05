@@ -13,7 +13,7 @@
   "PBftSignatureThreshold": 1.1,
   "Protocol": "Cardano",
   "RequiresNetworkMagic": "RequiresMagic",
-  "ShelleyGenesisFile": "shelly-genesis.json",
+  "ShelleyGenesisFile": "shelley-genesis.json",
   "ShelleyGenesisHash": "40de53f76f83eb808e08b3bf5c3183868f0bf8c61f1f38be656cdbb7b48c588d",
   "TestAllegraHardForkAtEpoch": 2,
   "TestAlonzoHardForkAtEpoch": 4,

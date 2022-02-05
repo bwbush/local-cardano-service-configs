@@ -20,6 +20,10 @@ build-chain-index:
 build-run:
 	nix-build marlowe-cardano/default.nix -A marlowe-dashboard.marlowe-run-backend-invoker -o build-run
 
+build-daedalus:
+	cd daedalus ; \
+	NETWORK=alonzo_purple nix-shell shell.nix --argstr nodeImplementation cardano --argstr cluster alonzo_purple --command 'yarn build ; exit'
+
 
 run-node: build-node
 	./build-node/bin/cardano-node run --config marlowe-cardano/bitte/node/config/config.json     \
@@ -32,7 +36,8 @@ run-wallet: build-wallet
 	./build-wallet/bin/cardano-wallet serve --testnet marlowe-cardano/bitte/node/config/byron-genesis.json \
 	                                        --database wallet.db                                           \
 	                                        --node-socket node.socket                                      \
-	                                        --port 8090
+	                                        --port 8090                                                    \
+	                                        --log-level DEBUG
 
 run-index: build-chain-index
 	./build-chain-index/plutus-chain-index start-index --network-id 1564                  \
@@ -57,6 +62,10 @@ run-server: build-run
 
 run-client:
 	nix-shell marlowe-cardano/shell.nix --run "cd marlowe-cardano/marlowe-dashboard-client; spago build; npm run start"
+
+run-daedalus:
+	cd daedalus ; \
+	NETWORK=alonzo_purple nix-shell shell.nix --argstr nodeImplementation cardano --argstr cluster alonzo_purple --command 'yarn start ; exit'
 
 
 statistics:
