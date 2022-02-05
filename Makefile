@@ -39,8 +39,8 @@ run-wallet: build-wallet
 	                                        --log-level DEBUG
 
 run-index: build-chain-index
-	./build-chain-index/plutus-chain-index start-index --network-id 1097911063            \
-	                                                   --db-path chain-index.db/ci.sqlite \
+	./build-chain-index/plutus-chain-index start-index --network-id 764824073             \
+                                                           --db-path chain-index.db/ci.sqlite \
 	                                                   --socket-path node.socket          \
 	                                                   --port 29083
 
