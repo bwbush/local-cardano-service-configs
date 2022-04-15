@@ -14,8 +14,8 @@ build-cli:
 build-wallet:
 	nix-build cardano-wallet/default.nix -A cardano-wallet -o build-wallet
 
-build-chain-index:
-	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-chain-index exe:plutus-chain-index"
+build-index:
+	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-index exe:plutus-chain-index"
 
 build-run:
 	nix-build marlowe-cardano/default.nix -A marlowe-dashboard.marlowe-run-backend-invoker -o build-run
@@ -38,13 +38,13 @@ run-wallet: build-wallet
 	                                        --port 28090                                                            \
 	                                        --log-level DEBUG
 
-run-index: build-chain-index
-	./build-chain-index/plutus-chain-index start-index --network-id 764824073             \
+run-index: build-index
+	./build-index/plutus-chain-index start-index --network-id 764824073             \
                                                            --db-path chain-index.db/ci.sqlite \
 	                                                   --socket-path node.socket          \
 	                                                   --port 29083
 
-run-db-sync:
+run-db:
 	PGHOST=/data/postgresql PGPASSFILE=cardano-db-sync/config/pgpass-mainnet build-db-sync/bin/cardano-db-sync \
 	    --config cardano-db-sync/config/mainnet-config.yaml                                                    \
 	    --socket-path node.socket                                                                              \
@@ -77,4 +77,4 @@ statistics:
 	@curl -H 'accept: application/json;charset=utf-8' http://localhost:29083/tip
 
 
-.PHONY: clean-pab run-node run-wallet run-chain-index run-pab run-server run-client
+.PHONY: clean-pab run-node run-wallet run-index run-pab run-server run-client
