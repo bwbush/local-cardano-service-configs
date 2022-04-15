@@ -1,0 +1,44 @@
+dbConfig:
+  dbConfigFile: marlowe-pab.db
+  dbConfigPoolSize: 20
+pabWebserverConfig:
+  baseUrl: http://localhost:39080
+  staticDir: marlowe-cardano/marlowe-dashboard-client/dist
+  permissiveCorsPolicy: False
+walletServerConfig:
+  tag: LocalWalletConfig
+  walletSettings:
+    baseUrl: http://localhost:38090
+nodeServerConfig:
+  pscSocketPath: node.socket
+  pscBaseUrl: "localhost"
+  pscKeptBlocks: 2160
+  pscNetworkId: "1097911063"
+  pscSlotConfig:
+    scSlotZeroTime: 1594369216000
+    scSlotLength: 1000
+  pscFeeConfig:
+    fcConstantFee:
+      getLovelace: 10
+    fcScriptsFeeFactor: 1.0
+  pscInitialTxWallets: []
+  pscNodeMode: AlonzoNode
+  pscProtocolParametersJsonPath: testnet.protocol
+chainIndexConfig:
+  ciBaseUrl: http://localhost:39083
+  ciWatchedAddresses: []
+requestProcessingConfig:
+  requestProcessingInterval: 1
+signingProcessConfig:
+  spBaseUrl: http://localhost:39084
+  spWallet:
+    getWallet: 1
+metadataServerConfig:
+  mdBaseUrl: http://localhost:39085
+developmentOptions:
+  pabRollbackHistory: null
+  pabResumeFrom:
+    tag: Point
+    pointSlot:
+      getSlot: 52142176
+    pointBlockId: 19d97ec9fce18d70558a0bc2f88320753b0e8ae2dd49fe54df8422f411ae1ac0 

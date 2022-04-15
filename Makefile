@@ -14,8 +14,8 @@ build-cli:
 build-wallet:
 	nix-build cardano-wallet/default.nix -A cardano-wallet -o build-wallet
 
-build-chain-index:
-	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-chain-index exe:plutus-chain-index"
+build-index:
+	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-index exe:plutus-chain-index"
 
 build-run:
 	nix-build marlowe-cardano/default.nix -A marlowe-dashboard.marlowe-run-backend-invoker -o build-run
@@ -38,13 +38,13 @@ run-wallet: build-wallet
 	                                        --port 38090                                                            \
 	                                        --log-level DEBUG
 
-run-index: build-chain-index
-	./build-chain-index/plutus-chain-index start-index --network-id 1097911063            \
+run-index: build-index
+	./build-index/plutus-chain-index start-index --network-id 1097911063                  \
 	                                                   --db-path chain-index.db/ci.sqlite \
 	                                                   --socket-path node.socket          \
 	                                                   --port 39083
 
-run-db-sync:
+run-db:
 	PGHOST=/data/postgresql PGPASSFILE=cardano-db-sync/config/pgpass-testnet build-db-sync/bin/cardano-db-sync \
 	    --config cardano-db-sync/config/testnet-config.yaml                                                    \
 	    --socket-path node.socket                                                                              \
@@ -60,6 +60,7 @@ marlowe-pab.db: build-pab
 run-pab: build-pab marlowe-pab.db
 	./build-pab/bin/marlowe-pab webserver --config marlowe-pab.yaml                \
 	                                      --passphrase fixme-allow-pass-per-wallet \
+	                                      --memory                                 \
 	                                      --verbose
 
 run-server: build-run
@@ -75,4 +76,4 @@ statistics:
 	@curl -H 'accept: application/json;charset=utf-8' http://localhost:39083/tip
 
 
-.PHONY: clean-pab run-node run-wallet run-chain-index run-pab run-server run-client
+.PHONY: clean-pab run-node run-wallet run-index run-pab run-server run-client
