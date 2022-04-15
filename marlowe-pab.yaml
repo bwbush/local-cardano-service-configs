@@ -2,20 +2,20 @@ dbConfig:
   dbConfigFile: marlowe-pab.db
   dbConfigPoolSize: 20
 pabWebserverConfig:
-  baseUrl: http://localhost:9080
+  baseUrl: http://localhost:49080
   staticDir: marlowe-cardano/marlowe-dashboard-client/dist
   permissiveCorsPolicy: False
 walletServerConfig:
   tag: LocalWalletConfig
   walletSettings:
-    baseUrl: http://localhost:8090
+    baseUrl: http://localhost:48090
 nodeServerConfig:
   pscSocketPath: node.socket
   pscBaseUrl: "localhost"
   pscKeptBlocks: 2160
   pscNetworkId: "1567"
   pscSlotConfig:
-    scSlotZeroTime: 1649976791000
+    scSlotZeroTime: 1649949631000
     scSlotLength: 1000
   pscFeeConfig:
     fcConstantFee:
@@ -25,16 +25,16 @@ nodeServerConfig:
   pscNodeMode: AlonzoNode
   pscProtocolParametersJsonPath: node.protocol
 chainIndexConfig:
-  ciBaseUrl: http://localhost:9083
+  ciBaseUrl: http://localhost:49083
   ciWatchedAddresses: []
 requestProcessingConfig:
   requestProcessingInterval: 1
 signingProcessConfig:
-  spBaseUrl: http://localhost:9084
+  spBaseUrl: http://localhost:49084
   spWallet:
     getWallet: 1
 metadataServerConfig:
-  mdBaseUrl: http://localhost:9085
+  mdBaseUrl: http://localhost:49085
 developmentOptions:
   pabRollbackHistory: null
   pabResumeFrom:

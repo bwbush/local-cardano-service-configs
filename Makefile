@@ -15,7 +15,7 @@ build-wallet:
 	nix-build cardano-wallet/default.nix -A cardano-wallet -o build-wallet
 
 build-index:
-	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-chain-index exe:plutus-chain-index"
+	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-index exe:plutus-chain-index"
 
 build-run:
 	nix-build marlowe-cardano/default.nix -A marlowe-dashboard.marlowe-run-backend-invoker -o build-run
@@ -29,20 +29,20 @@ run-node: build-node
 	                                  --topology node.topology  \
 	                                  --database-path node.db   \
 	                                  --socket-path node.socket \
-	                                  --port 3001
+	                                  --port 43001
 
 run-wallet: build-wallet
-	./build-wallet/bin/cardano-wallet serve --testnet iohk-nix/cardano-lib/marlowe-dev/byron-genesis.json \
-	                                        --database wallet.db                                          \
-	                                        --node-socket node.socket                                     \
-	                                        --port 8090                                                   \
+	./build-wallet/bin/cardano-wallet serve --testnet iohk-nix/cardano-lib/marlowe-pioneers/byron-genesis.json \
+	                                        --database wallet.db                                               \
+	                                        --node-socket node.socket                                          \
+	                                        --port 48090                                                       \
 	                                        --log-level DEBUG
 
-run-index: build-chain-index
-	./build-chain-index/plutus-chain-index start-index --network-id 1567                  \
-	                                                   --db-path chain-index.db/ci.sqlite \
-	                                                   --socket-path node.socket          \
-	                                                   --port 9083
+run-index: build-index
+	./build-index/plutus-chain-index start-index --network-id 1567                  \
+	                                             --db-path chain-index.db/ci.sqlite \
+	                                             --socket-path node.socket          \
+	                                             --port 49083
 
 clean-pab:
 	-rm marlowe-pab.db
@@ -63,13 +63,13 @@ run-pab-verbose: build-pab marlowe-pab.db
 run-dashboard-server: build-run
 	./build-run/bin/marlowe-dashboard-server webserver --config marlowe-run.json \
 	                                                   --network-id 1567         \
-                                                           --port 8083
+                                                           --port 48083
 
 run-dashboard-client:
 	nix-shell marlowe-cardano/shell.nix --run "cd marlowe-cardano/marlowe-dashboard-client; spago build; npm run start"
 
 run-playground-server: build-playground
-	WEBGHC_URL=8083 ./build-playground/bin/marlowe-playground-server webserver --port 8083
+	WEBGHC_URL=8083 ./build-playground/bin/marlowe-playground-server webserver --port 48083
 
 run-playground-client:
 	# cd marlowe-playground-client
