@@ -1,4 +1,8 @@
 {
   "wbeConfig": { "host": "localhost", "port": 8090 },
-  "staticPath": "/var/empty"
+  "staticPath": "/var/empty",
+  "chainIndexConfig" : {
+    "host" : "localhost",
+    "port" : 9083
+  }
 }

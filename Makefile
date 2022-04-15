@@ -1,5 +1,5 @@
 #!/usr/bin/env nix-shell
-#!nix-shell -i "make -f" -p gnumake jq curl
+#!nix-shell -i "make -f" -p gnumake jq curl postgresql
 
 
 build-pab:
@@ -14,33 +14,32 @@ build-cli:
 build-wallet:
 	nix-build cardano-wallet/default.nix -A cardano-wallet -o build-wallet
 
-build-chain-index:
+build-index:
 	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-chain-index exe:plutus-chain-index"
 
 build-run:
 	nix-build marlowe-cardano/default.nix -A marlowe-dashboard.marlowe-run-backend-invoker -o build-run
 
-build-daedalus:
-	cd daedalus ; \
-	NETWORK=alonzo_purple nix-shell shell.nix --argstr nodeImplementation cardano --argstr cluster alonzo_purple --command 'yarn build ; exit'
+build-playground:
+	nix-build marlowe-cardano/default.nix -A marlowe-playground.server -o build-playground
 
 
 run-node: build-node
-	./build-node/bin/cardano-node run --config marlowe-cardano/bitte/node/config/config.json     \
-	                                  --topology marlowe-cardano/bitte/node/config/topology.yaml \
-	                                  --database-path node.db                                    \
-	                                  --socket-path node.socket                                  \
+	./build-node/bin/cardano-node run --config node.config      \
+	                                  --topology node.topology  \
+	                                  --database-path node.db   \
+	                                  --socket-path node.socket \
 	                                  --port 3001
 
 run-wallet: build-wallet
-	./build-wallet/bin/cardano-wallet serve --testnet marlowe-cardano/bitte/node/config/byron-genesis.json \
-	                                        --database wallet.db                                           \
-	                                        --node-socket node.socket                                      \
-	                                        --port 8090                                                    \
+	./build-wallet/bin/cardano-wallet serve --testnet iohk-nix/cardano-lib/marlowe-dev/byron-genesis.json \
+	                                        --database wallet.db                                          \
+	                                        --node-socket node.socket                                     \
+	                                        --port 8090                                                   \
 	                                        --log-level DEBUG
 
 run-index: build-chain-index
-	./build-chain-index/plutus-chain-index start-index --network-id 1564                  \
+	./build-chain-index/plutus-chain-index start-index --network-id 1567                  \
 	                                                   --db-path chain-index.db/ci.sqlite \
 	                                                   --socket-path node.socket          \
 	                                                   --port 9083
@@ -53,24 +52,32 @@ marlowe-pab.db: build-pab
 
 run-pab: build-pab marlowe-pab.db
 	./build-pab/bin/marlowe-pab webserver --config marlowe-pab.yaml                \
+	                                      --memory                                 \
+	                                      --passphrase fixme-allow-pass-per-wallet
+
+run-pab-verbose: build-pab marlowe-pab.db
+	./build-pab/bin/marlowe-pab webserver --config marlowe-pab.yaml                \
+	                                      --memory                                 \
 	                                      --passphrase fixme-allow-pass-per-wallet \
 	                                      --verbose
+run-dashboard-server: build-run
+	./build-run/bin/marlowe-dashboard-server webserver --config marlowe-run.json \
+	                                                   --network-id 1567         \
+                                                           --port 8083
 
-run-server: build-run
-	./build-run/bin/marlowe-dashboard-server webserver --config marlowe-run.json
-
-
-run-client:
+run-dashboard-client:
 	nix-shell marlowe-cardano/shell.nix --run "cd marlowe-cardano/marlowe-dashboard-client; spago build; npm run start"
 
-run-daedalus:
-	cd daedalus ; \
-	NETWORK=alonzo_purple nix-shell shell.nix --argstr nodeImplementation cardano --argstr cluster alonzo_purple --command 'yarn start ; exit'
+run-playground-server: build-playground
+	WEBGHC_URL=8083 ./build-playground/bin/marlowe-playground-server webserver --port 8083
+
+run-playground-client:
+	# cd marlowe-playground-client
+	# $(nix-build ../default.nix -A marlowe-playground.generate-purescript)/bin/marlowe-playground-generate-purs
+	# npm install
+	# npm run build:spago
+	# npm run build:webpack:dev:vendor
+	nix-shell marlowe-cardano/shell.nix --command 'cd marlowe-cardano/marlowe-playground-client; npm run build:webpack:dev'
 
 
-statistics:
-	@du -hsc node.db wallet.db chain-index.db marlowe-pab.db
-	@curl -H 'accept: application/json;charset=utf-8' http://localhost:9083/tip
-
-
-.PHONY: clean-pab run-node run-wallet run-chain-index run-pab run-server run-client
+.PHONY: clean-pab run-node run-wallet run-index run-pab run-dashboard-server run-dashboard-client

@@ -8,11 +8,11 @@
     "poolRetireMaxEpoch": 18,
     "stakePoolDeposit": 500000000,
     "maxBlockExecutionUnits": {
-        "memory": 50000000,
+        "memory": 80000000,
         "steps": 40000000000
     },
     "extraPraosEntropy": null,
-    "stakePoolTargetNum": 150,
+    "stakePoolTargetNum": 3,
     "maxBlockHeaderSize": 1100,
     "maxCollateralInputs": 3,
     "txFeePerByte": 44,
@@ -194,7 +194,7 @@
         }
     },
     "maxTxExecutionUnits": {
-        "memory": 10000000,
+        "memory": 30000000,
         "steps": 10000000000
     },
     "executionUnitPrices": {
@@ -204,5 +204,5 @@
     "decentralization": 0.25,
     "utxoCostPerWord": 34482,
     "maxTxSize": 32768,
-    "maxBlockBodySize": 65536
+    "maxBlockBodySize": 98304
 }

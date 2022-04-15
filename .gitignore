@@ -2,7 +2,9 @@ tmp/
 *.tmp
 *.log
 *.sw?
+*.bin
 .pre-commit-config.yaml
+iohk-nix/
 cardano-node/
 cardano-db-sync/
 cardano-wallet/
@@ -14,5 +16,4 @@ wallet.db/
 chain-index.db/
 marlowe-pab.db
 build-*
-utxo1/
 *.mantra

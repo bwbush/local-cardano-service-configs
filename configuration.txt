@@ -1,6 +1,0 @@
-export CARDANO_NODE_SOCKET_PATH=/data/private.socket
-MAGIC=(--testnet 1564)
-cardano-node: 43001
-cardano-wallet:	48090
-cardano-chain-index: 49083
-cardano-db-sync: S/B marlowe
