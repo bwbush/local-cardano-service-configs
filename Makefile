@@ -15,7 +15,7 @@ build-wallet:
 	nix-build cardano-wallet/default.nix -A cardano-wallet -o build-wallet
 
 build-index:
-	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-chain-index exe:plutus-chain-index"
+	nix-shell plutus-apps/shell.nix --run "cd plutus-apps; cabal install --installdir=../build-index exe:plutus-chain-index"
 
 build-run:
 	nix-build marlowe-cardano/default.nix -A marlowe-dashboard.marlowe-run-backend-invoker -o build-run
@@ -39,10 +39,10 @@ run-wallet: build-wallet
 	                                        --log-level DEBUG
 
 run-index: build-chain-index
-	./build-chain-index/plutus-chain-index start-index --network-id 1566                  \
-	                                                   --db-path chain-index.db/ci.sqlite \
-	                                                   --socket-path node.socket          \
-	                                                   --port 9083
+	./build-index/plutus-chain-index start-index --network-id 1566                  \
+	                                             --db-path chain-index.db/ci.sqlite \
+	                                             --socket-path node.socket          \
+	                                             --port 9083
 
 clean-pab:
 	-rm marlowe-pab.db
