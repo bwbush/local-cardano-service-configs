@@ -1,0 +1,357 @@
+diff --git a/README.md b/README.md
+index 5c880705a..e6ae3c855 100644
+--- a/README.md
++++ b/README.md
+@@ -120,9 +120,9 @@ If you get SSL error when running `nix-shell` (SSL peer certificate or SSH remot
+ 1. Run `yarn nix:alonzo_purple` from `daedalus`.
+ 2. Run `yarn dev` from the subsequent `nix-shell`
+ 
+-##### Marlowe Pioneers
++##### Marlowe Development
+ 
+-1. Run `yarn nix:marlowe_pioneers` from `daedalus`.
++1. Run `yarn nix:marlowe_dev` from `daedalus`.
+ 2. Run `yarn dev` from the subsequent `nix-shell`
+ 
+ ##### Native token metadata server
+diff --git a/installer-clusters.cfg b/installer-clusters.cfg
+index 6a9dfe916..e9a09080f 100644
+--- a/installer-clusters.cfg
++++ b/installer-clusters.cfg
+@@ -1 +1 @@
+-mainnet mainnet_flight testnet shelley_qa staging alonzo_purple marlowe_pioneers
++mainnet mainnet_flight testnet shelley_qa staging alonzo_purple marlowe_dev
+diff --git a/installers/common/Types.hs b/installers/common/Types.hs
+index 61d9bb74b..1f60804f7 100644
+--- a/installers/common/Types.hs
++++ b/installers/common/Types.hs
+@@ -109,7 +109,7 @@ clusterNetwork Staging = "staging"
+ clusterNetwork Shelley_QA = "shelley_qa"
+ clusterNetwork Testnet = "testnet"
+ clusterNetwork Alonzo_Purple = "alonzo_purple"
+-clusterNetwork Marlowe_Pioneers = "marlowe_pioneers"
++clusterNetwork Marlowe_Pioneers = "marlowe_dev"
+ 
+ packageFileName :: OS -> Cluster -> Version -> Backend -> Text -> Maybe BuildJob -> FilePath
+ packageFileName _os cluster ver backend _backendVer build = fromText name <.> ext
+diff --git a/installers/icons/update_icons b/installers/icons/update_icons
+index cee604a86..925790bcb 100755
+--- a/installers/icons/update_icons
++++ b/installers/icons/update_icons
+@@ -2,7 +2,7 @@
+ #
+ # this script merges the png files into a single ico for windows
+ 
+-for x in mainnet mainnet_flight testnet staging shelley_qa alonzo_purple marlowe_pioneers selfnode; do
++for x in mainnet mainnet_flight testnet staging shelley_qa alonzo_purple marlowe_dev selfnode; do
+   pushd $x
+   convert 16x16.png 24x24.png 32x32.png 48x48.png 64x64.png 128x128.png 256x256.png $x.ico
+   popd
+diff --git a/iohk-nix.json b/iohk-nix.json
+index 888635b5d..9663dafb6 100644
+--- a/iohk-nix.json
++++ b/iohk-nix.json
+@@ -1,6 +1,6 @@
+ {
+   "url": "https://github.com/input-output-hk/iohk-nix",
+-  "rev": "0d4b8ab80dbe99edfe3bf47368a22e8a9e0e359e",
+-  "sha256": "0w6j43sm23rsvnm8af35mgl2vz0h0npjdph8jq8b9j8lby4di41p",
++  "rev": "3b90a1bd7472eb39fd4eba83832310718df58dc4",
++  "sha256": "02gpailkbfbr9n6nnzmm1pn4a3m3m44dfnvpw4isaxm8mxvxcqc3",
+   "fetchSubmodules": false
+ }
+diff --git a/nix/launcher-config.nix b/nix/launcher-config.nix
+index 7e152d49e..ee9dd8a39 100644
+--- a/nix/launcher-config.nix
++++ b/nix/launcher-config.nix
+@@ -31,10 +31,10 @@ let
+       cluster = "alonzo-purple";
+       networkName = "alonzo-purple";
+     };
+-    marlowe_pioneers = {
+-      cardanoEnv = cardanoLib.environments.marlowe-pioneers;
+-      cluster = "marlowe-pioners";
+-      networkName = "marlowe-pioneers";
++    marlowe_dev = {
++      cardanoEnv = cardanoLib.environments.marlowe-dev;
++      cluster = "marlowe-dev";
++      networkName = "marlowe-dev";
+     };
+   };
+   dirSep = if os == "windows" then "\\" else "/";
+@@ -95,7 +95,7 @@ let
+       testnet = "Testnet";
+       shelley_qa = "Shelley QA";
+       alonzo_purple = "Alonzo Purple";
+-      marlowe_pioneers = "Marlowe Pioneers";
++      marlowe_dev = "Marlowe Development";
+     };
+     unsupported = "Unsupported";
+     networkSupported = __hasAttr network supportedNetworks;
+diff --git a/nix/sources.json b/nix/sources.json
+index c4911f88d..f59a827c2 100644
+--- a/nix/sources.json
++++ b/nix/sources.json
+@@ -65,10 +65,10 @@
+         "homepage": null,
+         "owner": "input-output-hk",
+         "repo": "iohk-nix",
+-        "rev": "64121775787f6e2fba95bda6983726afd93a56cf",
+-        "sha256": "12677wi00inrj8kcl8nz2xcab486c1w7d52aprxfg5snmfqlrcql",
++        "rev": "3b90a1bd7472eb39fd4eba83832310718df58dc4",
++        "sha256": "02gpailkbfbr9n6nnzmm1pn4a3m3m44dfnvpw4isaxm8mxvxcqc3",
+         "type": "tarball",
+-        "url": "https://github.com/input-output-hk/iohk-nix/archive/64121775787f6e2fba95bda6983726afd93a56cf.tar.gz",
++        "url": "https://github.com/input-output-hk/iohk-nix/archive/3b90a1bd7472eb39fd4eba83832310718df58dc4.tar.gz",
+         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
+     },
+     "js-chain-libs": {
+diff --git a/package.json b/package.json
+index be2c6ab03..3532ef29f 100644
+--- a/package.json
++++ b/package.json
+@@ -57,7 +57,7 @@
+     "nix:shelley_qa": "./nix/yarn-nix-shell.sh shelley_qa shelley_qa",
+     "nix:staging": "./nix/yarn-nix-shell.sh staging staging",
+     "nix:testnet": "./nix/yarn-nix-shell.sh testnet testnet",
+-    "nix:marlowe_pioneers": "./nix/yarn-nix-shell.sh marlowe_pioneers marlowe_pioneers",
++    "nix:marlowe_dev": "./nix/yarn-nix-shell.sh marlowe_dev marlowe_dev",
+     "byron:wallet:importer": "ts-node utils/api-importer/byron-wallet-importer.ts",
+     "shelley:wallet:importer": "ts-node utils/api-importer/shelley-wallet-importer.ts",
+     "mary:wallet:importer": "ts-node utils/api-importer/mary-wallet-importer.ts",
+diff --git a/source/common/types/cardano-node.types.ts b/source/common/types/cardano-node.types.ts
+index 8bb6f2bf4..6f04ca7f1 100644
+--- a/source/common/types/cardano-node.types.ts
++++ b/source/common/types/cardano-node.types.ts
+@@ -29,7 +29,7 @@ export type NetworkNames =
+   | 'staging'
+   | 'shelley_qa'
+   | 'alonzo_purple'
+-  | 'marlowe_pioneers'
++  | 'marlowe_dev'
+   | 'selfnode'
+   | 'development'
+   | string;
+@@ -40,7 +40,7 @@ export const NetworkNameOptions = {
+   staging: 'staging',
+   shelley_qa: 'shelley_qa',
+   alonzo_purple: 'alonzo_purple',
+-  marlowe_pioneers: 'marlowe_pioneers',
++  marlowe_dev: 'marlowe_dev',
+   selfnode: 'selfnode',
+   development: 'development',
+ };
+@@ -75,7 +75,7 @@ export type CardanoPidOptions =
+   | 'staging-PREVIOUS-CARDANO-PID'
+   | 'shelley_qa-PREVIOUS-CARDANO-PID'
+   | 'alonzo_purple-PREVIOUS-CARDANO-PID'
+-  | 'marlowe_pioneers-PREVIOUS-CARDANO-PID'
++  | 'marlowe_dev-PREVIOUS-CARDANO-PID'
+   | 'selfnode-PREVIOUS-CARDANO-PID'
+   | 'development-PREVIOUS-CARDANO-PID'
+   | string;
+@@ -147,7 +147,7 @@ export const NetworkMagics: {
+   testnet: NetworkMagicType;
+   staging: NetworkMagicType;
+   alonzo_purple: NetworkMagicType;
+-  marlowe_pioneers: NetworkMagicType;
++  marlowe_dev: NetworkMagicType;
+   shelley_qa: NetworkMagicType;
+   selfnode: NetworkMagicType;
+ } = {
+@@ -159,7 +159,7 @@ export const NetworkMagics: {
+   [TESTNET]: [1097911063, 0],
+   // Cardano Alonzo Purple network magic
+   [ALONZO_PURPLE]: [8, 0],
+-  // Cardano Marlowe Pioneers network magic
++  // Cardano Marlowe Development network magic
+   [MARLOWE_PIONEERS]: [1565, 0],
+   // Cardano Shelley QA network magic
+   [SHELLEY_QA]: [3, 0],
+diff --git a/source/common/types/environment.types.ts b/source/common/types/environment.types.ts
+index 949a639ce..ee256cdac 100644
+--- a/source/common/types/environment.types.ts
++++ b/source/common/types/environment.types.ts
+@@ -45,7 +45,7 @@ export const TESTNET = 'testnet';
+ export const STAGING = 'staging';
+ export const SHELLEY_QA = 'shelley_qa';
+ export const ALONZO_PURPLE = 'alonzo_purple';
+-export const MARLOWE_PIONEERS = 'marlowe_pioneers';
++export const MARLOWE_PIONEERS = 'marlowe_dev';
+ export const SELFNODE = 'selfnode';
+ export const MAC_OS = 'darwin';
+ export const WINDOWS = 'win32';
+@@ -63,7 +63,7 @@ export type Network =
+   | 'staging'
+   | 'shelley_qa'
+   | 'alonzo_purple'
+-  | 'marlowe_pioneers'
++  | 'marlowe_dev'
+   | 'selfnode'
+   | 'development';
+ export const networkPrettyNames = {
+@@ -72,7 +72,7 @@ export const networkPrettyNames = {
+   staging: 'Staging',
+   shelley_qa: 'Shelley QA',
+   alonzo_purple: 'Alonzo Purple',
+-  marlowe_pioneers: 'Marlowe Pioneers',
++  marlowe_dev: 'Marlowe Development',
+   selfnode: 'Selfnode',
+   development: 'Development',
+ };
+diff --git a/source/common/utils/environmentCheckers.ts b/source/common/utils/environmentCheckers.ts
+index 2f54c9e4b..698b467d7 100644
+--- a/source/common/utils/environmentCheckers.ts
++++ b/source/common/utils/environmentCheckers.ts
+@@ -31,7 +31,7 @@ export const evaluateNetwork = (network: string | null | undefined) => {
+     currentNetwork = ALONZO_PURPLE;
+   }
+ 
+-  if (network === 'marlowe-pioneers') {
++  if (network === 'marlowe-dev') {
+     currentNetwork = MARLOWE_PIONEERS;
+   }
+ 
+diff --git a/source/renderer/app/components/sidebar/SidebarCategoryNetworkInfo.tsx b/source/renderer/app/components/sidebar/SidebarCategoryNetworkInfo.tsx
+index b6f75b82d..6c498c8ec 100644
+--- a/source/renderer/app/components/sidebar/SidebarCategoryNetworkInfo.tsx
++++ b/source/renderer/app/components/sidebar/SidebarCategoryNetworkInfo.tsx
+@@ -34,10 +34,10 @@ const messages = defineMessages({
+     defaultMessage: '!!!Alonzo Purple',
+     description: 'Label for alonzo_purple with version.',
+   },
+-  marlowe_pioneers: {
++  marlowe_dev: {
+     id: 'test.environment.marlowePioneersLabel',
+-    defaultMessage: '!!!Marlowe Pioneers',
+-    description: 'Label for marlowe_pioneers with version.',
++    defaultMessage: '!!!Marlowe Development',
++    description: 'Label for marlowe_dev with version.',
+   },
+   selfnode: {
+     id: 'test.environment.selfnodeLabel',
+diff --git a/source/renderer/app/components/widgets/WalletTestEnvironmentLabel.tsx b/source/renderer/app/components/widgets/WalletTestEnvironmentLabel.tsx
+index c849d4c87..650c09b52 100644
+--- a/source/renderer/app/components/widgets/WalletTestEnvironmentLabel.tsx
++++ b/source/renderer/app/components/widgets/WalletTestEnvironmentLabel.tsx
+@@ -29,10 +29,10 @@ const messages = defineMessages({
+     defaultMessage: '!!!Alonzo Purple',
+     description: 'Label for alonzo_purple with version.',
+   },
+-  marlowe_pioneers: {
++  marlowe_dev: {
+     id: 'test.environment.marlowePioneersLabel',
+-    defaultMessage: '!!!Marlowe Pioneers',
+-    description: 'Label for marlowe_pioneers with version.',
++    defaultMessage: '!!!Marlowe Development',
++    description: 'Label for marlowe_dev with version.',
+   },
+   selfnode: {
+     id: 'test.environment.selfnodeLabel',
+diff --git a/source/renderer/app/i18n/global-messages.ts b/source/renderer/app/i18n/global-messages.ts
+index faac05100..471abe0b0 100644
+--- a/source/renderer/app/i18n/global-messages.ts
++++ b/source/renderer/app/i18n/global-messages.ts
+@@ -222,10 +222,10 @@ export default defineMessages({
+     defaultMessage: '!!!Alonzo Purple',
+     description: '"Alonzo Purple" Cardano network',
+   },
+-  network_marlowe_pioneers: {
+-    id: 'environment.network.marlowe_pioneers',
+-    defaultMessage: '!!!Marlowe Pioneers',
+-    description: '"Marlowe Pioneers" Cardano network',
++  network_marlowe_dev: {
++    id: 'environment.network.marlowe_dev',
++    defaultMessage: '!!!Marlowe Development',
++    description: '"Marlowe Development" Cardano network',
+   },
+   network_development: {
+     id: 'environment.network.development',
+diff --git a/source/renderer/app/i18n/locales/defaultMessages.json b/source/renderer/app/i18n/locales/defaultMessages.json
+index 53727427c..39c73973a 100644
+--- a/source/renderer/app/i18n/locales/defaultMessages.json
++++ b/source/renderer/app/i18n/locales/defaultMessages.json
+@@ -3876,8 +3876,8 @@
+         }
+       },
+       {
+-        "defaultMessage": "!!!Marlowe Pioneers",
+-        "description": "Label for marlowe_pioneers with version.",
++        "defaultMessage": "!!!Marlowe Development",
++        "description": "Label for marlowe_dev with version.",
+         "end": {
+           "column": 3,
+           "line": 41
+@@ -17776,8 +17776,8 @@
+         }
+       },
+       {
+-        "defaultMessage": "!!!Marlowe Pioneers",
+-        "description": "Label for marlowe_pioneers with version.",
++        "defaultMessage": "!!!Marlowe Development",
++        "description": "Label for marlowe_dev with version.",
+         "end": {
+           "column": 3,
+           "line": 36
+@@ -19036,14 +19036,14 @@
+         }
+       },
+       {
+-        "defaultMessage": "!!!Marlowe Pioneers",
+-        "description": "\"Marlowe Pioneers\" Cardano network",
++        "defaultMessage": "!!!Marlowe Development",
++        "description": "\"Marlowe Development\" Cardano network",
+         "end": {
+           "column": 3,
+           "line": 229
+         },
+         "file": "source/renderer/app/i18n/global-messages.ts",
+-        "id": "environment.network.marlowe_pioneers",
++        "id": "environment.network.marlowe_dev",
+         "start": {
+           "column": 28,
+           "line": 225
+diff --git a/source/renderer/app/i18n/locales/en-US.json b/source/renderer/app/i18n/locales/en-US.json
+index 51ee369b0..79adfcf28 100755
+--- a/source/renderer/app/i18n/locales/en-US.json
++++ b/source/renderer/app/i18n/locales/en-US.json
+@@ -155,7 +155,7 @@
+   "environment.network.alonzo_purple": "Alonzo Purple",
+   "environment.network.development": "Development",
+   "environment.network.mainnet": "Mainnet",
+-  "environment.network.marlowe_pioneers": "Marlowe Pioneers",
++  "environment.network.marlowe_dev": "Marlowe Development",
+   "environment.network.selfnode": "Selfnode",
+   "environment.network.shelley_qa": "Shelley QA",
+   "environment.network.staging": "Staging",
+@@ -661,7 +661,7 @@
+   "test.environment.daedalusFlightLabel": "Cardano mainnet - Daedalus Flight",
+   "test.environment.developmentLabel": "Development",
+   "test.environment.mainnetLabel": "Mainnet",
+-  "test.environment.marlowePioneersLabel": "Marlowe Pioneers",
++  "test.environment.marlowePioneersLabel": "Marlowe Development",
+   "test.environment.selfnodeLabel": "Selfnode",
+   "test.environment.shelleyQaLabel": "Shelley QA",
+   "test.environment.stagingLabel": "Staging",
+diff --git a/source/renderer/app/i18n/locales/ja-JP.json b/source/renderer/app/i18n/locales/ja-JP.json
+index 7c8f70b32..997a20e0e 100755
+--- a/source/renderer/app/i18n/locales/ja-JP.json
++++ b/source/renderer/app/i18n/locales/ja-JP.json
+@@ -155,7 +155,7 @@
+   "environment.network.alonzo_purple": "Alonzo Purple",
+   "environment.network.development": "開発",
+   "environment.network.mainnet": "メインネット",
+-  "environment.network.marlowe_pioneers": "Marlowe Pioneers",
++  "environment.network.marlowe_dev": "Marlowe Development",
+   "environment.network.selfnode": "Selfnode",
+   "environment.network.shelley_qa": "Shelley QA",
+   "environment.network.staging": "ステージング",
+@@ -661,7 +661,7 @@
+   "test.environment.daedalusFlightLabel": "Cardano Mainnet - Daedalus Flight",
+   "test.environment.developmentLabel": "開発",
+   "test.environment.mainnetLabel": "メインネット",
+-  "test.environment.marlowePioneersLabel": "Marlowe Pioneers",
++  "test.environment.marlowePioneersLabel": "Marlowe Development",
+   "test.environment.selfnodeLabel": "Selfnode",
+   "test.environment.shelleyQaLabel": "Shelley QA",
+   "test.environment.stagingLabel": "ステージング",
