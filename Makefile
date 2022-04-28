@@ -10,13 +10,14 @@ include configuration.env
 
 marlowe-cardano:
 	git clone git@github.com:input-output-hk/marlowe-cardano.git
+	cd marlowe-cardano ; git apply ../marlowe-cardano.patch
 
 iohk-nix:
 	git clone git@github.com:input-output-hk/iohk-nix.git -b marlowe-dev-testnet
 
 daedalus:
 	git clone git@github.com:input-output-hk/daedalus.git -b feature/ddw-1039-marlowe-pioneers-installer
-	git apply daedalus.patch
+	cd daedalus ; git apply ../daedalus.patch
 
 run-node: marlowe-cardano iohk-nix
 	cardano-node run --config node.config      \
