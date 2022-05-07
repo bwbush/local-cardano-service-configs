@@ -46,14 +46,8 @@ node.protocol: marlowe-cardano
 	export CARDANO_NODE_SOCKET_PATH=$(CURDIR)/node.socket                        ; \
 	cardano-cli query protocol-parameters --testnet-magic $(CARDANO_TESTNET_MAGIC) \
 	                                      --out-file $@
-	
-clean-pab:
-	-rm marlowe-pab.db
 
-marlowe-pab.db: marlowe-cardano iohk-nix
-	marlowe-pab migrate --config marlowe-pab.yaml
-
-run-pab: marlowe-pab.db node.protocol marlowe-cardano iohk-nix
+run-pab: node.protocol marlowe-cardano iohk-nix
 	marlowe-pab webserver --config marlowe-pab.yaml                \
 	                      --memory                                 \
 	                      --passphrase fixme-allow-pass-per-wallet
@@ -66,15 +60,18 @@ run-pab-verbose: marlowe-pab.db node.protocol marlowe-cardano iohk-nix
 
 test-nonpab: marlowe-cardano
 	cd marlowe-cardano/marlowe-cli                        ; \
+	export TREASURY=/extra/iohk/networks/treasury         ; \
 	export CARDANO_NODE_SOCKET_PATH=$(CURDIR)/node.socket ; \
 	export CARDANO_TESTNET_MAGIC=$(CARDANO_TESTNET_MAGIC) ; \
 	./run-nonpab-tests.sh
 
 test-pab: marlowe-cardano
-	cd marlowe-cardano/marlowe-cli                        ; \
-	export CARDANO_NODE_SOCKET_PATH=$(CURDIR)/node.socket ; \
-	export CARDANO_TESTNET_MAGIC=$(CARDANO_TESTNET_MAGIC) ; \
-	./run-tests.sh
+	cd marlowe-cardano/marlowe-cli                           ; \
+	export TREASURY=/extra/iohk/networks/treasury            ; \
+	export CARDANO_NODE_SOCKET_PATH=$(CURDIR)/node.socket    ; \
+	export CARDANO_TESTNET_MAGIC=$(CARDANO_TESTNET_MAGIC)    ; \
+	./run-tests.sh --w http://localhost:$(CARDANO_WALLET_PORT) \
+	                -p http://localhost:$(MARLOWE_PAB_PORT)
 
 run-marlowe-server: marlowe-cardano
 	$$(nix-build marlowe-cardano/default.nix -A marlowe.haskell.packages.marlowe-dashboard-server.components.exes.marlowe-dashboard-server --no-out-link)/bin/marlowe-dashboard-server \
@@ -88,15 +85,11 @@ run-marlowe-client: marlowe-cardano
 	npm run start
 
 run-playground-server: marlowe-cardano
-	WEBGHC_URL=$(MARLOWE_PLAYGROUND_SERVER) ./build-playground/bin/marlowe-playground-server webserver --port $(MARLOWE_PLAYGROUND_SERVER)
+	WEBGHC_URL=$(MARLOWE_PLAYGROUND_SERVER) $$(nix-build marlowe-cardano/default.nix -A marlowe-playground.server --no-out-link)/bin/marlowe-playground-server \
+	webserver --port $(MARLOWE_PLAYGROUND_SERVER)
 
 run-playground-client: marlowe-cardano
-	# cd marlowe-playground-client
-	# $(nix-build ../default.nix -A marlowe-playground.generate-purescript)/bin/marlowe-playground-generate-purs
-	# npm install
-	# npm run build:spago
-	# npm run build:webpack:dev:vendor
-	nix-shell marlowe-cardano/shell.nix --command 'cd marlowe-cardano/marlowe-playground-client; npm run build:webpack:dev'
+	cd marlowe-cardano/marlowe-playground-client; npm run start
 
 run-daedalus: daedalus
 	cd daedalus ; \
