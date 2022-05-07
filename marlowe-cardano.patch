@@ -1,0 +1,59 @@
+diff --git a/marlowe-dashboard-client/webpack.config.js b/marlowe-dashboard-client/webpack.config.js
+index 02c7c6699..2d808051a 100644
+--- a/marlowe-dashboard-client/webpack.config.js
++++ b/marlowe-dashboard-client/webpack.config.js
+@@ -15,19 +15,19 @@ module.exports = {
+     contentBase: path.join(__dirname, "dist"),
+     compress: true,
+     host: "0.0.0.0",
+-    port: 8009,
++    port: 48009,
+     stats: "errors-warnings",
+     proxy: {
+       "/pab/api": {
+-        target: "http://localhost:9080",
++        target: "http://localhost:49080",
+         pathRewrite: { "^/pab": "/" },
+       },
+       "/pab/wallet": {
+-        target: "http://localhost:9080",
++        target: "http://localhost:49080",
+         pathRewrite: { "^/pab": "/" },
+       },
+       "/pab/ws": {
+-        target: "ws://localhost:9080",
++        target: "ws://localhost:49080",
+         ws: true,
+         pathRewrite: { "^/pab": "/" },
+         onError(err) {
+@@ -35,7 +35,7 @@ module.exports = {
+         },
+       },
+       "/api": {
+-        target: "http://localhost:8080",
++        target: "http://localhost:48083",
+       },
+     },
+   },
+diff --git a/marlowe-playground-client/webpack.config.js b/marlowe-playground-client/webpack.config.js
+index df6583db0..f38085d7d 100644
+--- a/marlowe-playground-client/webpack.config.js
++++ b/marlowe-playground-client/webpack.config.js
+@@ -34,14 +34,14 @@ module.exports = {
+   devServer: {
+     contentBase: path.join(__dirname, "dist"),
+     compress: true,
+-    port: 8009,
++    port: 48008,
+     https: true,
+     proxy: {
+       "/api": {
+-        target: "http://localhost:8080",
++        target: "http://localhost:48083",
+       },
+       "/runghc": {
+-        target: "http://localhost:8080",
++        target: "http://localhost:48083",
+       },
+     },
+   },
