@@ -1,6 +1,10 @@
-dbConfig:
-  dbConfigFile: marlowe-pab.db
-  dbConfigPoolSize: 20
+contractStoreConfig:
+  tag: UseFSStore
+  contents: marlowe-pab.db
+# tag: UseInMemoryStore
+#dbConfig:
+#  dbConfigFile: marlowe-pab.db
+#  dbConfigPoolSize: 20
 pabWebserverConfig:
   baseUrl: http://localhost:9080
   staticDir: marlowe-cardano/marlowe-dashboard-client/dist
@@ -36,6 +40,11 @@ signingProcessConfig:
 metadataServerConfig:
   mdBaseUrl: http://localhost:9085
 developmentOptions:
-  pabRollbackHistory: null
+  pabRollbackHistory: 100
   pabResumeFrom:
     tag: PointAtGenesis
+#  pabResumeFrom:
+#    tag: Point
+#    pointSlot:
+#      getSlot: 2833409
+#    pointBlockId: 13a4a19e8089a4d9abb942662ae4839ce4e3597e523ccb4e4540b0e17f71bef4

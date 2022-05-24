@@ -47,16 +47,28 @@ node.protocol: marlowe-cardano
 	cardano-cli query protocol-parameters --testnet-magic $(CARDANO_TESTNET_MAGIC) \
 	                                      --out-file $@
 
-run-pab: node.protocol marlowe-cardano iohk-nix
+marlowe-pab.db:
+	mkdir -p marlowe-pab.db
+
+run-clean-pab: marlowe-pab.db node.protocol marlowe-cardano iohk-nix
+	-rm marlowe-pab.db/*                                          ;\
 	marlowe-pab webserver --config marlowe-pab.yaml                \
-	                      --memory                                 \
+	                      --passphrase fixme-allow-pass-per-wallet
+
+run-pab: marlowe-pab.db node.protocol marlowe-cardano iohk-nix
+	marlowe-pab webserver --config marlowe-pab.yaml                \
+	                      --passphrase fixme-allow-pass-per-wallet
+
+run-clean-pab-verbose: marlowe-pab.db node.protocol marlowe-cardano iohk-nix
+	-rm marlowe-pab.db/*                                          ;\
+	marlowe-pab webserver --config marlowe-pab.yaml                \
+	                      --verbose                                \
 	                      --passphrase fixme-allow-pass-per-wallet
 
 run-pab-verbose: marlowe-pab.db node.protocol marlowe-cardano iohk-nix
 	marlowe-pab webserver --config marlowe-pab.yaml                \
-	                      --memory                                 \
-	                      --passphrase fixme-allow-pass-per-wallet \
-	                      --verbose
+	                      --verbose                                \
+	                      --passphrase fixme-allow-pass-per-wallet
 
 test-nonpab: marlowe-cardano
 	cd marlowe-cardano/marlowe-cli                        ; \
@@ -66,12 +78,14 @@ test-nonpab: marlowe-cardano
 	./run-nonpab-tests.sh
 
 test-pab: marlowe-cardano
-	cd marlowe-cardano/marlowe-cli                           ; \
-	export TREASURY=/extra/iohk/networks/treasury            ; \
-	export CARDANO_NODE_SOCKET_PATH=$(CURDIR)/node.socket    ; \
-	export CARDANO_TESTNET_MAGIC=$(CARDANO_TESTNET_MAGIC)    ; \
-	./run-tests.sh --w http://localhost:$(CARDANO_WALLET_PORT) \
-	                -p http://localhost:$(MARLOWE_PAB_PORT)
+	cd marlowe-cardano/marlowe-cli                            ; \
+	export TREASURY=../treasury                               ; \
+	./run-tests.sh -m $(CARDANO_TESTNET_MAGIC)                  \
+	               -s $(CURDIR)/node.socket                     \
+	               --faucet-skey-file  ${TREASURY}/payment.skey \
+	               --faucet-vkey-file  ${TREASURY}/payment.vkey \
+	               -w http://localhost:$(CARDANO_WALLET_PORT)   \
+	               -p http://localhost:$(MARLOWE_PAB_PORT)
 
 run-marlowe-server: marlowe-cardano
 	$$(nix-build marlowe-cardano/default.nix -A marlowe.haskell.packages.marlowe-dashboard-server.components.exes.marlowe-dashboard-server --no-out-link)/bin/marlowe-dashboard-server \
@@ -95,6 +109,8 @@ run-daedalus: daedalus
 	cd daedalus ; \
 	NETWORK=marlowe_dev nix-shell shell.nix --argstr nodeImplementation cardano --argstr cluster marlowe_dev --command 'yarn start ; exit'
 
+slotting:
+	while true; do  echo $$(($$(date -u +%s) - 1649976791)) - $$(cardano-cli query tip --testnet-magic $$MAGIC | jq .slot) = $$(($$(date -u +%s) - 1649976791 - $$(cardano-cli query tip --testnet-magic $$MAGIC | jq .slot))); sleep 1s; done
 
 .SUFFIXES:
 
